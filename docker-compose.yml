@@ -1,36 +1,20 @@
-version: '3.4'
 services:
   app:
     container_name: frontend
-    image: registry.gov.bw/teachers-reg-and-licensing/frontend:1.0
-    build:
-      context: ./
-      target: dev
-      dockerfile: Dockerfile
+    image: node:20  # Use Node.js 20 from Docker Hub
     volumes:
       - .:/app
       - /app/node_modules
       - /app/.next
-    dns:
-      - 10.0.25.138
-      - 10.0.26.138
-      - 10.0.26.139
-      - 10.0.5.20
+    command: ["npm", "start"]  # Adjust this based on your project setup
 
   nginx:
     container_name: front_nginx
     restart: unless-stopped
-    image: nginx
+    image: nginx:latest
     depends_on:
       - app
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - ./Nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./Nginx/SSL:/etc/nginx/SSL  # Mount the SSL folder into the container
-    dns:
-      - 10.0.25.138
-      - 10.0.26.138
-      - 10.0.26.139
-      - 10.0.5.20
